@@ -1,0 +1,75 @@
+{% extends 'basic_connection.html' %}
+
+{% block title %}Регистрация{% endblock title %}
+
+{% block content %}
+<!-- Основное содержимое страницы регистрации -->
+<div class="container pt-3">
+    <!-- Модальное окно для регистрации -->
+    <div class="modal d-block" style="position: static;">
+        <div class="modal-dialog">
+            <div class="modal-content" style="opacity: 0.9; background-color: rgba(255, 255, 255, 0.55);">
+                <!-- Заголовок модального окна -->
+                <div>
+                    <h3 class="pt-4 ps-4 pb-2 mb-0">Регистрация</h3>
+                    <hr>
+                </div>
+                <!-- Форма для ввода данных пользователя -->
+                <div>
+                    <form action="{% url 'register_view' %}" method="POST">
+                        {% csrf_token %}
+                        <!-- Отображение общих ошибок формы -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger mx-4">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+                        <!-- Поле ввода email -->
+                        <div class="form-floating mb-3 mx-4">
+                            <input type="{{ form.email.field.widget.input_type }}" class="form-control" id="floatingInput" placeholder="name@example.com" name="{{ form.email.name }}">
+                            <label for="floatingInput">{{ form.email.label }}</label>
+                        </div>
+                        <!-- Отображение ошибок для поля email -->
+                        {% if form.email.errors %}
+                            <div class="alert alert-danger mx-4">
+                                {{ form.email.errors }}
+                            </div>
+                        {% endif %}
+                        <!-- Поле ввода пароля -->
+                        <div class="form-floating mb-3 mx-4">
+                            <input type="{{ form.password1.field.widget.input_type }}" class="form-control" id="floatingInput" name="{{ form.password1.name }}">
+                            <label for="floatingInput">{{ form.password1.label }}</label>
+                        </div>
+                        <!-- Отображение ошибок для поля пароля -->
+                        {% if form.password1.errors %}
+                            <div class="alert alert-danger mx-4">
+                                {{ form.password1.errors }}
+                            </div>
+                        {% endif %}
+                        <!-- Поле повторного ввода пароля -->
+                        <div class="form-floating mb-3 mx-4">
+                            <input type="{{ form.password2.field.widget.input_type }}" class="form-control" id="floatingInput" name="{{ form.password2.name }}">
+                            <label for="floatingInput">{{ form.password2.label }}</label>
+                        </div>
+                        <!-- Отображение ошибок для поля повторного ввода пароля -->
+                        {% if form.password2.errors %}
+                            <div class="alert alert-danger mx-4" style="list-style-type: none;">
+                                {{ form.password2.errors }}
+                            </div>
+                        {% endif %}
+                        <!-- Кнопка для отправки формы -->
+                        <div class="form-floating mb-3 mx-4 d-flex justify-content-end">
+                            <button class="btn btn-success px-4">Зарегистрироваться</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Нижняя часть модального окна с дополнительными ссылками -->
+                <div class="modal-footer">
+                    <span class="me-auto">Уже есть аккаунт?</span>
+                    <a class="btn btn-secondary" href="{% url 'login_view' %}">Войти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

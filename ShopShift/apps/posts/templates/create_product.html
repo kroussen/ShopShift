@@ -1,0 +1,74 @@
+{% extends 'basic_connection.html' %}
+
+{% block title %}Создать объявление{% endblock title %}
+
+{% block content %}
+<!-- Основное содержимое страницы авторизации -->
+<div class="container pt-3">
+
+    <div class="modal d-block" style="position: static;">
+        <div class="modal-dialog" style="max-width: 70%;">
+            <div class="modal-content" style="opacity: 0.9; background-color: rgba(255, 255, 255, 0.55);">
+                <div>
+                    <h3 class="ps-3 pt-3">Создать объявление</h3>
+                    <hr>
+                </div>
+                <div class="row p-3 pt-2 pb-0">
+                    <div class="col-12 d-flex justify-content-start mb-4">
+                        <div style="min-height: 100%;">
+                            <form action="{% url 'create_product' %}" method="POST" class="d-flex flex-column">
+                                {% csrf_token %}
+                                <div class="row g-3 align-items-center mb-3">
+                                    <div class="col-auto">
+                                        <label for="{{ form.title.name }}" class="col-form-label">
+                                            {{ form.title.label }}
+                                        </label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="{{ form.title.field.widget.input_type }}" id="{{ form.title.name }}" class="form-control" name="{{ form.title.name }}">
+                                    </div>
+                                    <div class="col-auto">
+                                        <span class="form-text">
+                                            <span class="text-danger">{{ form.title.errors }}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row g-3 align-items-center mb-3">
+                                    <div class="col-auto">
+                                        <label for="{{ form.price.name }}" class="col-form-label">
+                                            {{ form.price.label }}
+                                        </label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="{{ form.price.field.widget.input_type }}" id="{{ form.price.name }}" class="form-control" name="{{ form.price.name }}">
+                                    </div>
+                                    <div class="col-auto">
+                                        <span class="form-text">
+                                            {% if form.price.errors %}
+                                                <span class="text-danger">{{ form.price.errors }}</span>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row g-3 align-items-center mb-3">
+                                    <div class="col-auto">
+                                        <label for="{{ form.description.name }}" class="col-form-label">
+                                            {{ form.description.label }}
+                                        </label>
+                                    </div>
+                                    <div class="col-auto">
+                                        {{ form.description }}
+                                    </div>
+                                </div>
+                                <button class="btn btn-success ms-auto px-3">Создать</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{% endblock content %}

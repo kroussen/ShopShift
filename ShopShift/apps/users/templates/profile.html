@@ -1,0 +1,45 @@
+{% extends 'basic_connection.html' %}
+
+{% block title %}Профиль{% endblock title %}
+
+{% block content %}
+<!-- Основное содержимое страницы авторизации -->
+<div class="container pt-3">
+
+    <div class="modal d-block" style="position: static;">
+        <div class="modal-dialog" style="max-width: 90%;">
+            <div class="modal-content" style="opacity: 0.9; background-color: rgba(255, 255, 255, 0.55);">
+                <div>
+                    <h3 class="ps-3 pt-3">Профиль</h3>
+                    <hr>
+                </div>
+                <div class="row p-3 pt-2">
+                    <div class="col-12 col-md-5 d-flex justify-content-center mb-4">
+                        <img src="{{ user.image }}" alt="User image" style="width: 60%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="col-12 col-md-7" style="min-height: 100%;">
+                            <div class="d-flex flex-column" style="min-height: 100%;">
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <h5 {% if message.tags %} class="{{ message.tags }} pb-3" {% endif %} >{{ message }}</h5>
+                                    {% endfor %}
+                                {% endif %}
+                                {% if user.username %}
+                                    <h5 class="mb-4">Имя пользователя: {{ user.username }}</h5>
+                                {% else %}
+                                    <h5 class="mb-4">Имя пользователя: Не указано</h5>
+                                {% endif %}
+                                <h5 class="mb-4">Email: {{ user.email }}</h5>
+                                <div class="mt-auto mb-4">
+                                    <a href="{% url 'edit_profile_view' %}" class="btn btn-secondary">Редактировать профиль</a>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{% endblock content %}

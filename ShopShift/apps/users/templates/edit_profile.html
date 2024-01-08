@@ -1,0 +1,110 @@
+{% extends 'basic_connection.html' %}
+
+{% block title %}Редактирование профиля{% endblock title %}
+
+{% block content %}
+<!-- Основное содержимое страницы авторизации -->
+<div class="container pt-3">
+
+    <div class="modal d-block" style="position: static;">
+        <div class="modal-dialog" style="max-width: 90%;">
+            <div class="modal-content" style="opacity: 0.9; background-color: rgba(255, 255, 255, 0.55);">
+                <div>
+                    <h3 class="ps-3 pt-3">Редактирование профиля</h3>
+                    <hr>
+                </div>
+                <div class="row p-3 pt-2">
+                    <div class="col-12 col-lg-5 d-flex justify-content-center mb-4">
+                        <img src="{{ user.image }}" alt="User image" style="width: 60%; height: 100%; object-fit: cover;" id="userImage">
+                    </div>
+                    <div class="col-12 col-lg-7" style="min-height: 100%;">
+                        <div class="d-flex flex-column" style="min-height: 100%;">
+                            <form action="{% url 'edit_profile_view' %}" method="POST">
+                                {% csrf_token %}
+                                {% if form.email.errors %}
+                                    <div class="ms-2 me-4 mb-3 text-danger">
+                                        {{ form.email.errors }}
+                                    </div>
+                                {% endif %}
+                                {% if user.username %}
+                                    <div class="form-floating mb-3 ms-2 me-4">
+                                        <input type="{{ form.username.field.widget.input_type }}" class="form-control" id="floatingInput" name="{{ form.username.name }}" value="{{ user.username }}">
+                                        <label for="floatingInput">Введите имя пользователя</label>
+                                    </div>
+                                {% else %}
+                                    <div class="form-floating mb-3 ms-2 me-4">
+                                        <input type="{{ form.username.field.widget.input_type }}" class="form-control" id="floatingInput" name="{{ form.username.name }}">
+                                        <label for="floatingInput">{{ form.username.label }}</label>
+                                    </div>
+                                {% endif %}
+                                <div class="form-floating mb-3 ms-2 me-4">
+                                    <input type="{{ form.email.field.widget.input_type }}" class="form-control" id="floatingInput" name="{{ form.email.name }}" value="{{ user.email }}">
+                                    <label for="floatingInput">Введите Email</label>
+                                </div>
+
+                                <div class="mb-3 ms-2 me-4">
+                                    <label for="fileUserImage" class="form-label ps-1" id="imageStatus">Выберите изображение</label>
+                                    <input class="form-control" type="file" id="fileUserImage">
+                                </div>
+
+                                <input type="hidden" name="image" id="imageInput" value="{{ user.image }}">
+
+                                <div class="mt-auto mb-4 d-flex ms-2 me-4">
+                                    <button class="btn btn-secondary">Сохранить</button>
+                                    <a href="{% url 'change_password_view' %}" class="btn btn-danger ms-auto">Сменить пароль</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function () {
+
+    var image_status = false;
+
+    $('#fileUserImage').on('change', function () {
+        var clientId = '' # token Imgur;
+        var apiUrl = 'https://api.imgur.com/3/image';
+        var fileInput = document.getElementById('fileUserImage');
+        var imageFile = fileInput.files[0];
+
+        if (imageFile) {
+            var formData = new FormData();
+            formData.append('image', imageFile);
+
+            $.ajax({
+                url: apiUrl,
+                type: 'POST',
+                headers: {
+                    'Authorization': 'Client-ID ' + clientId,
+                },
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    var uploadedImageUrl = response.data.link;
+                    $("#imageStatus").removeClass('text-danger').text('Выберите изображение');
+                    $("#userImage").attr("src", uploadedImageUrl);
+                    var imageUrl = $('#userImage').attr('src');
+                    $('#imageInput').val(imageUrl);
+                },
+                error: function(error) {
+                    $("#imageStatus").addClass('text-danger').text('Выберите другое изображение');
+                }
+            });
+        } else {
+            $("#image_status").show();
+        }
+    })
+});
+</script>
+{% endblock scripts %}
